@@ -1,0 +1,52 @@
+
+
+CREATE COMPUTE MODULE postRetrieve_Request_Service01
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+		BEGIN
+		-- Declaramos las variables de entrada y salida
+        DECLARE customerId CHARACTER InputRoot.JSON.Data.customerId;
+        DECLARE productCode CHARACTER InputRoot.JSON.Data.productCode;
+        DECLARE ruc CHARACTER InputRoot.JSON.Data.ruc;
+        DECLARE currencyCode CHARACTER InputRoot.JSON.Data.currencyCode;
+        DECLARE WVC_INP_FILLER CHARACTER;
+        DECLARE output_trama CHARACTER;
+        DECLARE input_trama CHARACTER;
+        
+        
+        
+        SET input_trama = customerId || productCode || ruc || currencyCode;
+      	SET Environment.TramaInput = input_trama;
+        
+	
+        -- Ajustamos longitud de input_customerId a 10 caracteres (rellenado antes del valor)
+        SET customerId = 
+            SPACE(10 - LENGTH(SUBSTRING(customerId FROM 1 FOR 10))) || SUBSTRING(customerId FROM 1 FOR 10);
+
+        -- Ajustamos longitud de input_productCode a 3 caracteres (rellenado antes del valor)
+        SET productCode = 
+            SPACE(3 - LENGTH(SUBSTRING(productCode FROM 1 FOR 3))) || SUBSTRING(productCode FROM 1 FOR 3);
+
+        -- Ajustamos longitud de input_ruc a 11 caracteres (rellenado antes del valor)
+        SET ruc = 
+            SPACE(11 - LENGTH(SUBSTRING(ruc FROM 1 FOR 11))) || SUBSTRING(ruc FROM 1 FOR 11);
+
+        -- Ajustamos longitud de input_currencyCode a 3 caracteres (rellenado antes del valor)
+        SET currencyCode = 
+            SPACE(3 - LENGTH(SUBSTRING(currencyCode FROM 1 FOR 3))) || SUBSTRING(currencyCode FROM 1 FOR 3);
+            
+        -- Agregamos espacios
+        SET WVC_INP_FILLER = SPACE(1840);
+
+        -- Construimos la trama plana
+        SET output_trama = customerId || productCode || ruc || currencyCode || WVC_INP_FILLER;
+
+        -- Configurar el tipo de contenido para la trama plana
+        SET OutputRoot.Properties.ContentType = 'text/plain';
+        
+
+        SET Environment.TramaOutput = output_trama;
+		RETURN TRUE;
+	END;
+
+
+END MODULE;

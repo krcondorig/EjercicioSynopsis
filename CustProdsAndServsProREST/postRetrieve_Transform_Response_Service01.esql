@@ -1,0 +1,18 @@
+
+
+CREATE COMPUTE MODULE postRetrieve_Transform_Response_Service01
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE received_tramaResponse CHARACTER Environment.Trama_response;
+		SET Environment.TramaResponseRecibida = received_tramaResponse;
+		
+		DECLARE WVC_COD_UNICO CHARACTER SUBSTRING(received_tramaResponse FROM 1868 FOR 2);
+	    DECLARE WVC_COD_PRODUCTO CHARACTER SUBSTRING(received_tramaResponse FROM 1870 FOR 23);
+	    
+	    SET OutputRoot.JSON.Data.afiliationFlag = WVC_COD_UNICO;
+   	 	SET OutputRoot.JSON.Data.customMessage = WVC_COD_PRODUCTO;
+	    
+		RETURN TRUE;
+	END;
+
+END MODULE;

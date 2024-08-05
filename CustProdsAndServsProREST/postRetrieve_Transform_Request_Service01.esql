@@ -1,0 +1,23 @@
+
+
+CREATE COMPUTE MODULE postRetrieve_Transform_Request_Service01
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		
+		DECLARE received_tramaResponse CHARACTER Environment.Trama_response;
+		SET Environment.TramaResponseRecibida = received_tramaResponse;
+		
+	    DECLARE WVC_COD_UNICO CHARACTER SUBSTRING(received_tramaResponse FROM 1 FOR 10);
+	    DECLARE WVC_COD_PRODUCTO CHARACTER SUBSTRING(received_tramaResponse FROM 11 FOR 3);
+	    DECLARE WVC_RUC CHARACTER SUBSTRING(received_tramaResponse FROM 14 FOR 11);
+	    DECLARE WVC_CODMON CHARACTER SUBSTRING(received_tramaResponse FROM 25 FOR 3);
+	    
+	    SET OutputRoot.JSON.WVC_COD_UNICO = WVC_COD_UNICO;
+	    SET OutputRoot.JSON.WVC_COD_PRODUCTO = WVC_COD_PRODUCTO;
+	    SET OutputRoot.JSON.WVC_RUC = WVC_RUC;
+	    SET OutputRoot.JSON.WVC_CODMON = WVC_CODMON;
+	    
+		RETURN TRUE;
+	END;
+
+END MODULE;

@@ -1,0 +1,9 @@
+
+
+CREATE COMPUTE MODULE postRetrieve_Service_ErrorResponse
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		
+	END;
+
+END MODULE;

@@ -1,0 +1,75 @@
+
+
+CREATE COMPUTE MODULE postRetrieve_Response_Service01
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		
+		
+		DECLARE received_trama CHARACTER Environment.TramaOutput;
+		DECLARE trama_response CHARACTER;
+		SET Environment.Trama_recibida = received_trama;
+		
+		DECLARE customerId CHARACTER SUBSTRING(received_trama FROM 1 FOR 10);
+		DECLARE productCode CHARACTER SUBSTRING(received_trama FROM 11 FOR 3);
+		DECLARE ruc CHARACTER SUBSTRING(received_trama FROM 14 FOR 11);
+		DECLARE currencyCode CHARACTER SUBSTRING(received_trama FROM 25 FOR 3);
+		
+		
+		--SET Environment.PROBANDO6.customerId= customerId || '---' || productCode || '---' || ruc || '---' || currencyCode;
+		
+		DECLARE WVC_RET_ESTADO CHARACTER;
+		DECLARE WVC_OUT_MENSAJ CHARACTER;
+		
+		--Escenario 1
+		IF customerId = '1234567891' THEN
+			SET WVC_RET_ESTADO = 'OK';
+		    SET WVC_OUT_MENSAJ = 'Procesado correctamente';
+		END IF;
+		
+		--Escenario 2
+		IF productCode = '001' THEN
+			SET WVC_RET_ESTADO = 'OK';
+		    SET WVC_OUT_MENSAJ = 'Procesado correctamente';
+		END IF;
+		
+		--Escenario 3
+		IF ruc = '11223344556' THEN
+			SET WVC_RET_ESTADO = 'OK';
+		    SET WVC_OUT_MENSAJ = 'Procesado correctamente';
+		END IF;
+		
+		--Escenario 4
+		IF currencyCode = 'PEN' THEN
+			SET WVC_RET_ESTADO = 'OK';
+		    SET WVC_OUT_MENSAJ = 'Procesado correctamente';
+		END IF;
+		
+		--Escenario 5
+		IF customerId = '1234567890' THEN
+			SET WVC_RET_ESTADO = 'OK';
+		    SET WVC_OUT_MENSAJ = 'Procesado correctamente';
+		END IF;
+		
+		--Error Controlado 1
+		IF currencyCode = 'EUR' THEN
+			SET WVC_RET_ESTADO = 'NO';
+		    SET WVC_OUT_MENSAJ = 'ERROR DIVISA INVALIDA';
+		END IF;
+		
+		--Error Controlado 2
+		IF productCode = '002' THEN
+			SET WVC_RET_ESTADO = 'NO';
+		    SET WVC_OUT_MENSAJ = 'ERROR EN CODIGO DE PRODUCTO';
+		END IF;
+		
+			
+		-- Construimos la trama de respuesta concatenando los resultados
+		SET trama_response = received_trama || WVC_RET_ESTADO || WVC_OUT_MENSAJ;
+		
+		
+		SET Environment.Trama_response = trama_response;
+        
+		RETURN TRUE;
+	END;
+
+END MODULE;
